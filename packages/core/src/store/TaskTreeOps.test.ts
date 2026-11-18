@@ -9,6 +9,7 @@ import {
   findTask,
   flattenTasks,
   moveTaskInTree,
+  subtaskDefaults,
   totalLoggedHours,
   updateTaskInTree
 } from './TaskTreeOps'
@@ -199,6 +200,29 @@ describe('collectAllTags', () => {
       task({ id: 'b', subtasks: [task({ id: 'b1', tags: ['bar', 'baz'] })] })
     ]
     expect(collectAllTags(tasks)).toEqual(['bar', 'baz', 'foo'])
+  })
+})
+
+describe('subtaskDefaults', () => {
+  it('takes the start and due date of the parent', () => {
+    const parent = task({ id: 'p', start: '2026-11-02', due: '2026-11-20' })
+    expect(subtaskDefaults(parent)).toEqual({ start: '2026-11-02', due: '2026-11-20' })
+  })
+
+  it('keeps an unset parent date unset instead of falling back to today', () => {
+    expect(subtaskDefaults(task({ id: 'p', start: '', due: '2026-11-20' }))).toEqual({ start: '', due: '2026-11-20' })
+    expect(subtaskDefaults(task({ id: 'p', start: '2026-11-02', due: '' }))).toEqual({ start: '2026-11-02', due: '' })
+  })
+
+  it('leaves the new-task defaults alone when the parent has no dates or is missing', () => {
+    expect(subtaskDefaults(task({ id: 'p', start: '', due: '' }))).toEqual({})
+    expect(subtaskDefaults(null)).toEqual({})
+  })
+
+  it('lets explicit defaults win when spread after it', () => {
+    const parent = task({ id: 'p', start: '2026-11-02', due: '2026-11-20' })
+    const sub = makeTask({ ...subtaskDefaults(parent), due: '2026-11-10' })
+    expect(sub).toMatchObject({ start: '2026-11-02', due: '2026-11-10' })
   })
 })
 

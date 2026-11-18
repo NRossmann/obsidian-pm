@@ -18,6 +18,8 @@ import {
   type Task,
   makeTask,
   flattenTasks,
+  findTaskById,
+  subtaskDefaults,
   getDefaultStatusId,
   getDefaultPriorityId,
   getPriorityConfig,
@@ -76,10 +78,12 @@ export class TaskEditor {
       }
     } else {
       const config = plugin.store.configFor(project)
+      const parent = parentId ? findTaskById(project, parentId) : null
       this.task = makeTask({
         status: getDefaultStatusId(config.statuses),
         priority: getDefaultPriorityId(config.priorities),
         type: parentId ? 'subtask' : 'task',
+        ...subtaskDefaults(parent),
         ...defaults
       })
       this.isNew = true

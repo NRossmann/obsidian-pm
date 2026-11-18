@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - The task name column in the table can now be resized
+- New subtasks now start with the start and due date of their parent task ([#168](https://github.com/dotpm/obsidian-pm/issues/168))
 
 ### Fixed
 

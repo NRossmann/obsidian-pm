@@ -55,6 +55,17 @@ export function deleteTaskFromTree(tasks: Task[], id: string): boolean {
   return false
 }
 
+/**
+ * The dates a new subtask starts out with: its parent's, so it sits inside the parent's
+ * span. A parent with neither date leaves the usual new-task defaults in place.
+ */
+export function subtaskDefaults(
+  parent: Pick<Task, 'start' | 'due'> | null | undefined
+): Partial<Pick<Task, 'start' | 'due'>> {
+  if (!parent || (!parent.start && !parent.due)) return {}
+  return { start: parent.start, due: parent.due }
+}
+
 export function addTaskToTree(tasks: Task[], newTask: Task, parentId: string | null): void {
   if (!parentId) {
     tasks.push(newTask)

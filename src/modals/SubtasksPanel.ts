@@ -2,6 +2,7 @@ import {
   type StatusConfig,
   type Task,
   makeTask,
+  subtaskDefaults,
   isTerminalStatus,
   getCompleteStatusId,
   getDefaultStatusId,
@@ -86,7 +87,7 @@ export function renderSubtasksPanel(
     if (e.key !== 'Enter') return
     const title = addInput.value.trim()
     if (!title) return
-    task.subtasks.push(makeTask({ title, type: 'subtask' }))
+    task.subtasks.push(makeTask({ title, type: 'subtask', ...subtaskDefaults(task) }))
     addInput.value = ''
     renderSubtasks()
     renderCount()
